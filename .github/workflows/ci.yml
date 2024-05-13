@@ -1,0 +1,75 @@
+name: CI
+on: [push]
+
+jobs:
+  unit-and-feature-tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:11
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      # https://github.com/marketplace/actions/checkout
+      - name: Checkout Git Repository
+        uses: actions/checkout@v2
+
+      # https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+      - name: Setup Ruby, JRuby and TruffleRuby
+        uses: ruby/setup-ruby@v1.70.1
+
+      # https://github.com/marketplace/actions/github-action-for-yarn
+      - name: Yarn Install
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install --ignore-engines
+
+      - name: Install Apt Packages
+        run: |
+          sudo apt-get -yqq install libpq-dev
+      - name: Cache Gems
+        uses: actions/cache@v2
+        with:
+          path: vendor/bundle
+          key: ${{ runner.os }}-gems-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gems-
+      - name: Bundle Install
+        env:
+          RAILS_ENV: test
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+      - name: Setup Database
+        run: |
+          cp config/database.yml.github-actions config/database.yml
+          bundle exec rake db:create
+          bundle exec rake db:schema:load
+        env:
+          RAILS_ENV: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+      - name: Run Unit Tests
+        run: |
+          bundle exec rake test
+        env:
+          RAILS_ENV: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+      - name: Run System Tests
+        run: |
+          bundle exec rake test:system
+        env:
+          RAILS_ENV: test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+
+      - name: Code coverage
+        uses: codecov/codecov-action@v1
