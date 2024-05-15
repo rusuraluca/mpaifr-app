@@ -18,7 +18,14 @@ class InquiresController < ApplicationController
 
     if @inquire.save
       similarity = fetch_similarity(@profile.images, @inquire.images)
-      if @inquire.update(similarity: similarity)
+      if similarity >= 0.5
+        status = 'Solved'
+      elsif similarity > 0.25
+        status = 'Not Verified'
+      else
+        status = 'Not Solved'
+      end
+      if @inquire.update(similarity: similarity, status: status)
         redirect_to [:admin, @profile], notice: 'Your inquiry has been sent successfully and similarity updated.'
       else
         flash.now[:alert] = 'Failed to update similarity: ' + @inquire.errors.full_messages.join(', ')
@@ -50,20 +57,38 @@ class InquiresController < ApplicationController
 
   private
 
-  require 'net/http/post/multipart'
+  require 'faraday'
+  require 'json'
 
   def fetch_similarity(profile_images, inquiry_images)
-    uri = URI('http://127.0.0.1:5000/batch_images_similarity')
-    request = Net::HTTP::Post::Multipart.new uri.path,
-                                             "imageList1" => convert_to_uploads(profile_images),
-                                             "imageList2" => convert_to_uploads(inquiry_images)
+    url = 'https://28d5-188-24-100-23.ngrok-free.app/batch_images_similarity'
+    conn = Faraday.new(url) do |f|
+      f.request :multipart
+      f.adapter Faraday.default_adapter
+    end
 
-    response = Net::HTTP.start(uri.hostname, uri.port) do |http|
-      http.request(request)
+    payload = {
+      'imageList1' => convert_to_uploads(profile_images),
+      'imageList2' => convert_to_uploads(inquiry_images)
+    }
+
+    payload.each do |key, files|
+      files.each do |file|
+        logger.info "File prepared for upload: #{file.original_filename}"
+      end
+    end
+
+    response = conn.post do |req|
+      req.body = {}
+      payload.each do |key, files|
+        files.each_with_index do |file, index|
+          req.body["#{key}"] = Faraday::FilePart.new(file.path, file.content_type, file.original_filename)
+        end
+      end
     end
 
     result = JSON.parse(response.body)
-    logger.info result['similarity']
+    logger.info "Response received: #{result}"
     result['similarity']
   rescue => e
     logger.error "Failed to call MPAIFR API: #{e.message}"
@@ -75,11 +100,12 @@ class InquiresController < ApplicationController
       file_path = ActiveStorage::Blob.service.path_for(attachment.key)
       logger.info "Accessing file at: #{file_path}"
       if File.exist?(file_path)
-        UploadIO.new(file_path, "image/jpeg", File.basename(file_path))
+        Faraday::UploadIO.new(file_path, attachment.content_type, File.basename(file_path))
       else
         logger.error "File does not exist at path: #{file_path}"
+        nil
       end
-    end
+    end.compact
   end
 
   def set_inquire

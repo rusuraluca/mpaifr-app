@@ -49,14 +49,14 @@ div.w-100
                   strong.mr-2 Country of Disappearance:
                   = profile.country_of_disappearance
               .btn-toolbar.mt-5
-                = link_to admin_profile_path(profile), class: "btn btn-primary mr-2" do
+                = link_to admin_profile_path(profile), class: "btn btn-primary mr-2 mt-2" do
                   i.fas.fa-eye
                   |  View
-                = link_to new_profile_inquire_path(profile), class: "btn btn-primary mr-2" do
+                = link_to new_profile_inquire_path(profile), class: "btn btn-primary mr-2 mt-2" do
                   i.fas.fa-file
                   |  Send Inquiry
                 - if user_is_admin?
-                  = link_to profile_inquires_path(profile), class: "btn btn-primary mr-2" do
+                  = link_to profile_inquires_path(profile), class: "btn btn-primary mr-2 mt-2" do
                     i.fas.fa-file
                     |  View Inquiries
 

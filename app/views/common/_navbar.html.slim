@@ -6,12 +6,6 @@ nav.navbar.navbar-expand-lg.navbar-dark.bg-secondary.sticky-top
     ul.navbar-nav.mr-auto
       li.nav-item.m-2
         = link_to(t("dashboard"), dashboard_path)
-      li.nav-item.m-2
-        = link_to("Menu Item 1", "#")
-      li.nav-item.m-2
-        = link_to("Menu Item 2", "#")
-      li.nav-item.m-2
-        = link_to("Menu Item 3", "#")
       - if user_is_admin?
         li.nav-item.m-2
           = link_to("User Management", admin_users_path)

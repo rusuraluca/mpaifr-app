@@ -34,16 +34,16 @@ div.w-100
 
           h4.card-text.strong
             strong.mr-2 Similarity Score:
-            span.badge.bg-danger.text-white = sprintf('%.2f%%', @inquire.similarity * 100)
+            span.badge class=(@inquire.similarity >= 0.50 ? 'bg-success text-white' : @inquire.similarity > 0.25 ? 'bg-warning text-white' : 'bg-danger text-white') = sprintf('%.2f%%', @inquire.similarity * 100)
 
           .btn-toolbar.mt-3
-            = link_to admin_profile_path(@inquire.profile), class: "btn btn-light" do
+            = link_to admin_profile_path(@inquire.profile), class: "btn btn-light mt-2" do
               i.fas.fa-user
               |  Profile
           .btn-toolbar.mt-3
-            = link_to edit_profile_inquire_path(@inquire.profile, @inquire), class: "btn btn-secondary mr-2" do
+            = link_to edit_profile_inquire_path(@inquire.profile, @inquire), class: "btn btn-secondary mr-2 mt-2" do
               i.fas.fa-edit
               |  Update Status
-              = link_to profile_inquire_path(@inquire.profile, @inquire), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger" do
+              = link_to profile_inquire_path(@inquire.profile, @inquire), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-danger mt-2" do
                 i.fas.fa-trash-alt
                 |  Delete

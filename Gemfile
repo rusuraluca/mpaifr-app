@@ -31,8 +31,10 @@ gem "bootstrap5-kaminari-views"
 gem 'simple_form'
 gem 'country_select'
 gem 'image_processing'
-gem 'multipart-post'
+gem 'faraday'
 
+
+gem 'rails-erd', '~> 1.7', '>= 1.7.2'
 # Use Active Storage variant
 # gem "image_processing", "~> 1.2"
 
