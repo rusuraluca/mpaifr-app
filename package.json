@@ -1,5 +1,5 @@
 {
-  "name": "rails_bootstrap_template",
+  "name": "mpaifr",
   "private": true,
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.5.2",
@@ -18,5 +18,8 @@
   "devDependencies": {
     "webpack": "^4.46.0",
     "webpack-dev-server": "^3.11.2"
+  },
+  "engines": {
+    "node": "16.18.1"
   }
 }
