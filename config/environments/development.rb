@@ -61,7 +61,7 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Default mailer options for Devise
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.default_url_options = { host: 'mpaifr-app-5f34b5d810f6.herokuapp.com/'}
 
   config.hosts << "28d5-188-24-100-23.ngrok-free.app"
 
