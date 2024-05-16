@@ -66,6 +66,6 @@ Rails.application.configure do
   config.hosts << "28d5-188-24-100-23.ngrok-free.app"
 
   # Options for Letter Opener gem
-  config.action_mailer.delivery_method = :letter_opener
-  config.action_mailer.perform_deliveries = true
+  #config.action_mailer.delivery_method = :letter_opener
+  #config.action_mailer.perform_deliveries = true
 end
