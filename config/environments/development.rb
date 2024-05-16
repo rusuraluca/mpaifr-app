@@ -32,7 +32,7 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
 
   config.action_mailer.perform_caching = false
 
@@ -61,9 +61,23 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Default mailer options for Devise
-  config.action_mailer.default_url_options = { host: 'mpaifr-app-5f34b5d810f6.herokuapp.com/'}
 
   config.hosts << "28d5-188-24-100-23.ngrok-free.app"
+
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_caching = false
+  config.action_mailer.default_url_options = { host: 'localhost', port: 5000 }
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.default charset: 'utf-8'
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'smtp-relay.brevo.com',
+    port: 587,
+    user_name: '74f145001@smtp-brevo.com',
+    password: 'yRTsJ7QHMZf9a648',
+    authentication: 'plain',
+    enable_starttls_auto: true
+  }
 
   # Options for Letter Opener gem
   #config.action_mailer.delivery_method = :letter_opener

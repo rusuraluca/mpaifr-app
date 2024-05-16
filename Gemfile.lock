@@ -158,6 +158,10 @@ GEM
     msgpack (1.4.2)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
+    net-protocol (0.2.2)
+      timeout
+    net-smtp (0.5.0)
+      net-protocol
     nio4r (2.5.7)
     nokogiri (1.11.3)
       mini_portile2 (~> 2.5.0)
@@ -290,6 +294,7 @@ GEM
     thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    timeout (0.4.1)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -342,6 +347,7 @@ DEPENDENCIES
   kaminari
   letter_opener
   listen (~> 3.2)
+  net-smtp
   pg (>= 0.18, < 2.0)
   pry (~> 0.13.1)
   puma (~> 4.1)

@@ -32,6 +32,7 @@ gem 'simple_form'
 gem 'country_select'
 gem 'image_processing'
 gem 'faraday'
+gem 'net-smtp'
 
 
 gem 'rails-erd', '~> 1.7', '>= 1.7.2'
